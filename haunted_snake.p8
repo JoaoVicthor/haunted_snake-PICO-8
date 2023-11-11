@@ -6,6 +6,7 @@ function _init()
     pal(12, 139, 1)
 	  palt(0,false) -- black as opaque
     palt(5,true) -- off-white as alpha
+    camera()
     c = {
       dir = ➡️,
       idir = ➡️,
@@ -19,6 +20,12 @@ function _init()
       df = 0,
       df_max = 0
     }
+
+    if retries == nil then
+      retries = 0
+    else
+      retries += 1
+    end
 
     nodes = {}
     local first_node =  create_node(5*8,5*8,6*8,5*8,false,false,3,0,➡️)
@@ -64,11 +71,15 @@ function _draw()
   end
   draw_shadow(c.fruit)
   foreach(nodes,draw_shadow)
-  map(0,0)
   if #c.ghosts != 0 then
     for ghost in all(c.ghosts) do
-      draw_shadow(ghost, 1)
-      spr(ghost.s, ghost.x, ghost.y, 1, 1, rnd({false,true}))
+      draw_shadow(ghost, rnd({0,1}))
+    end
+  end
+  map(0,0)
+  if #c.ghosts != 0 then  
+    for ghost in all(c.ghosts) do 
+      spr(ghost.s, ghost.x, ghost.y + rnd(2), 1, 1, rnd({false,true}))
     end
   end
   spr(c.fruit.s, c.fruit.x, c.fruit.y)
@@ -107,7 +118,7 @@ end
 function handle_ghosts()
   local limit = flr((c.score - 10) / 5)
   if #c.ghosts < limit then
-    odds = flr(rnd(100))
+    odds = flr(rnd(100)) + retries
     if odds >= 95 and nodes[1].x % 8 == 0 and nodes[1].y % 8 == 0 then
       add(c.ghosts, create_ghost())
     end
@@ -257,7 +268,7 @@ function process_collision()
     if (c.score >= 50) then
       camera(0,0)
       cls(0)
-      print("Stage 1 complete", 32, 64,7)
+      print("stage 1 complete", 32, 64,7)
       sleep(10)
       extcmd("shutdown")
     else
@@ -332,7 +343,9 @@ function screen_shake()
 end
 
 function print_hud()
-  print("score: "..c.score,16,1,0)
+  local text = "score: "..c.score
+  rectfill(7,0,8 + #text*4-1,6,7)
+  print(text,8,1,0)
 end
 
 function handle_dialogue()
@@ -361,7 +374,7 @@ function handle_dialogue()
   elseif c.score > 20 then
     write_dialogue("I've been chasing this for long.")
   elseif c.score > 15 then
-    write_dialogue("Sometimes I wish this would end.")
+    write_dialogue("At times I wish this would end.")
   elseif c.score > 11 then
     write_dialogue("I feel different.")
   elseif c.score > 7 then
@@ -374,6 +387,8 @@ end
 
 function write_dialogue(text)
   if text != nil then
+    local x1,x2
+
     if c.df_max != #text then
       c.df_max = #text
       c.df = 0
@@ -382,9 +397,12 @@ function write_dialogue(text)
       c.df += 1
       sfx(7)
     end
+    x1 = 63 - (c.df*4 / 2) 
+    x2 = x1 + c.df*4 - 1
+    rectfill(x1, 8*15+1, x2, 8*16-1, 7)
     local print_text = sub(text, 1, c.df)
     
-    print(print_text,1, 8*15 + 2)
+    print(print_text,x1+1, 8*15 + 2, 0)
   end
 end
 
