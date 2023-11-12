@@ -1,11 +1,17 @@
 ## Haunted Snake (PICO-8)
 
->Since he was a hatchling, Snek has been plagued by these strange apparitions. 
+>Since he was a hatchling, Snek has been plagued by these strange apparitions.
+
 >He never understood why.
+
 >Snek was an only child of a sick mother, who died even before he had first shed skin.
->His last words, as he fondly remembers;
+
+>Her last words, as he fondly remembers;
+
 >"Seek fruit. Don't feed on other animals and the curse shall be lifted, so no other snake will ever suffer again."
+
 >Now, as an older snakelet, Snek nears his redemption.
+
 >Snek shall lift the curse, fulfilling his mother's last wish.
 
 First stage is complete.
